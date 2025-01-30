@@ -1,9 +1,9 @@
 async function fetchPCDetails(barcode) {
     try {
-        // This will be replaced with actual API call later
+        // will be replaced with actual API call later
         console.log('Scanned barcode:', barcode);
         
-        // For now, show dummy data
+        // For now, dummy data
         displayPCDetails({
             barcode: barcode,
             model: "Test PC",
