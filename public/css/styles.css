@@ -14,3 +14,9 @@
     margin-top: 20px;
     border-radius: 5px;
 }
+
+svg:hover {
+    cursor: pointer;
+    background-color: bisque;
+    border-radius: 10px;
+}

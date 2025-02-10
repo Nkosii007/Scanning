@@ -15,12 +15,23 @@ function onScanSuccess(decodedText, decodedResult) {
     // Stop scanning
     html5QrcodeScanner.clear();
     html5QrcodeScanner = null;
+
+     // Fetch PC details (will implement this in app.js)
+     fetchPCDetails(decodedText);
     
     // Show result
-    document.getElementById('result').classList.remove('d-none');
+    const existingDetails = document.getElementById('result').classList.remove('d-none');
+    const newDetails = document.createElement('div');
+
+    newDetails.innerHTML = `
+    <div class="result">
+      <p><strong>Barcode:</strong> ${decodedText}</p>
+      <!-- Add other details here -->
+    </div>
+  `;
+  existingDetails.appendChild(newDetails);
     
-    // Fetch PC details (will implement this in app.js)
-    fetchPCDetails(decodedText);
+   
 }
 
 function onScanFailure(error) {
