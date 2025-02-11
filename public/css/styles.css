@@ -52,3 +52,10 @@ svg:hover {
 .item-container:hover {
     background-color: lightslategray;
 }
+
+input[type="text"] {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 10px;
+}

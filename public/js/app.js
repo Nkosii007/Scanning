@@ -27,14 +27,15 @@ function displayPCDetails(pc, index) {
     newDetails.classList.add('item-container');
 
     newDetails.innerHTML = `
-        <div class="result">
-            <span class="remove-icon">&minus;</span>
-            <p><strong>Barcode:</strong> ${pc.barcode}</p>
-            <p><strong>Model:</strong> ${pc.model}</p>
-            <p><strong>Location:</strong> ${pc.location}</p>
-            <p><strong>Status:</strong> ${pc.status}</p>
-        </div>
-    `;
+    <div class="result">
+        <span class="remove-icon">&minus;</span>
+        <p><strong>Barcode:</strong> ${pc.barcode}</p>
+        <label><strong>Model:</strong> <input type="text" value="" class="model-input" placeholder="Enter item model"></label>
+        <label><strong>Location:</strong> <input type="text" value="" class="location-input" placeholder="Enter item location"></label>
+        <label><strong>Status:</strong> <input type="text" value="" class="status-input" placeholder="Enter item status"></label>
+    </div>
+`;
+
     detailsDiv.appendChild(newDetails);
 }
 
@@ -71,7 +72,7 @@ document.getElementById('assignButton').addEventListener('click', function() {  
 
     // Disable the Assign button
     this.disabled = true; 
-
+ 
     console.log("Technician Name:", technicianName);
     console.log("Technician Email:", technicianEmail);
     console.log("Intake items", scannedItems); // Log before sending
