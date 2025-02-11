@@ -8,15 +8,47 @@
     width: 100%;
 }
 
+.item-container {
+    position: relative;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
 .result {
     background-color: #f8f9fa;
     padding: 15px;
     margin-top: 20px;
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.remove-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    color: red;
+    background-color: whitesmoke;
+    border-radius: 50%;
+    padding: 3px 5px;
+    line-height: 1;
+    border: 2px solid red;
+}
+
+.remove-icon:hover {
+    background-color: red;
+    color: white;
 }
 
 svg:hover {
     cursor: pointer;
-    background-color: bisque;
+    background-color: lightslategray;
     border-radius: 10px;
+}
+
+.item-container:hover {
+    background-color: lightslategray;
 }

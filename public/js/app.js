@@ -1,91 +1,120 @@
+let scannedItems =[]; // Initialize as an empty array
+let itemIndex = 0;
+
 async function fetchPCDetails(barcode) {
     try {
-      // will be replaced with actual API call later
-      console.log('Scanned barcode:', barcode);
-  
-      // For now, dummy data
-      const pc = {
-        barcode: barcode,
-        model: "Test PC",
-        location: "Test Lab",
-        status: "Active"
-      };
-  
-      // Append the new information to the existing HTML
-      const existingDetails = document.getElementById('pc-details');
-      const newDetails = document.createElement('div');
-      newDetails.innerHTML = `
-        <div class="result">
-          <p><strong>Barcode:</strong> ${pc.barcode}</p>
-          <p><strong>Model:</strong> ${pc.model}</p>
-          <p><strong>Location:</strong> ${pc.location}</p>
-          <p><strong>Status:</strong> ${pc.status}</p>
-        </div>
-      `;
-      existingDetails.appendChild(newDetails);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
+        console.log('Scanned barcode:', barcode);
 
-function displayPCDetails(pc) {
+        const pc = {
+            barcode: barcode,
+            model: "Test PC",
+            location: "Test Lab",
+            status: "Active"
+        };
+
+        scannedItems.push(pc);
+        displayPCDetails(pc, itemIndex);
+        itemIndex++;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function displayPCDetails(pc, index) {
     const detailsDiv = document.getElementById('pc-details');
-    detailsDiv.innerHTML = `
+    const newDetails = document.createElement('div');
+    newDetails.dataset.index = index;
+    newDetails.classList.add('item-container');
+
+    newDetails.innerHTML = `
         <div class="result">
+            <span class="remove-icon">&minus;</span>
             <p><strong>Barcode:</strong> ${pc.barcode}</p>
             <p><strong>Model:</strong> ${pc.model}</p>
             <p><strong>Location:</strong> ${pc.location}</p>
             <p><strong>Status:</strong> ${pc.status}</p>
         </div>
     `;
+    detailsDiv.appendChild(newDetails);
 }
 
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('remove-icon')) {
+        const itemDiv = event.target.closest('.item-container');
+        const indexToRemove = itemDiv.dataset.index;
 
+        itemDiv.remove();
+        scannedItems.splice(indexToRemove, 1);
 
-
-
-
-
-const addAsset = document.getElementById('add-button');
-addAsset.onclick = () => {
-   // Trigger the scanner again
-   let html5QrcodeScanner;
-
-addAsset.addEventListener('click', function() {
-    if (!html5QrcodeScanner) {
-        html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader",
-            { fps: 10, qrbox: { width: 250, height: 250 } }
-        );
-        
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        const detailsDiv = document.getElementById('pc-details');
+        detailsDiv.innerHTML = "";
+        for (let i = 0; i < scannedItems.length; i++) {
+            displayPCDetails(scannedItems[i], i);
+        }
     }
 });
 
-function onScanSuccess(decodedText, decodedResult) {
-    // Stop scanning
-    html5QrcodeScanner.clear();
-    html5QrcodeScanner = null;
+document.getElementById('scan-complete').addEventListener('click', function() {
+    const technicianModal = new bootstrap.Modal(document.getElementById('technicianModal'));
+    technicianModal.show();
+});
 
-     // Fetch PC details (will implement this in app.js)
-     fetchPCDetails(decodedText);
-    
-    // Show result
-    const existingDetails = document.getElementById('result').classList.remove('d-none');
-    const newDetails = document.createElement('div');
+document.getElementById('assignButton').addEventListener('click', function() {  // Only ONE event listener
+    const technicianName = document.getElementById('technicianName').value;
+    const technicianStaffNumber = document.getElementById('technicianStaffNumber').value;
+    const technicianEmail = document.getElementById('technicianEmail').value;
 
-    newDetails.innerHTML = `
-    <div class="result">
-      <p><strong>Barcode:</strong> ${decodedText}</p>
-      <!-- Add other details here -->
-    </div>
-  `;
-  existingDetails.appendChild(newDetails);
-    
-   
-}
+    if (technicianName.trim() === "" || technicianEmail.trim() === "" || technicianStaffNumber.trim() === "") {
+        alert("Please fill in all the fields");
+        return;
+    }
 
-function onScanFailure(error) {
-     console.warn(`Code scan error = ${error}`);
-}
-}
+    // Disable the Assign button
+    this.disabled = true; 
+
+    console.log("Technician Name:", technicianName);
+    console.log("Technician Email:", technicianEmail);
+    console.log("Intake items", scannedItems); // Log before sending
+
+    fetch('http://localhost:3001/send-email', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ technicianName, technicianStaffNumber, technicianEmail, scannedItems })
+    })
+  .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => {
+                alert("Error sending intake details: " + err.error); // More specific error message
+                this.disabled = false; // Re-enable the button
+                throw new Error(err.error)
+            });
+        }
+        return response.json();
+    })
+  .then(data => {
+        console.log('Success:', data.message);
+        scannedItems =[]; // Clear the array
+        itemIndex = 0;
+        document.getElementById('pc-details').innerHTML = "";
+        document.getElementById('result').classList.add('d-none');
+        alert("Intake details sent to technician");
+
+        // Clear the form fields
+        document.getElementById('technicianName').value = "";
+        document.getElementById('technicianStaffNumber').value = "";
+        document.getElementById('technicianEmail').value = "";
+
+        this.disabled = false; // Re-enable on success
+
+        // Close the modal after successful response
+        const technicianModalEl = document.getElementById('technicianModal');
+        const technicianModal = bootstrap.Modal.getInstance(technicianModalEl);
+        technicianModal.hide();
+    })
+  .catch(error => {
+        console.error('Error:', error);
+        
+    });
+});

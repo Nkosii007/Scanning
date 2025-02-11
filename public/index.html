@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PC Tracker</title>
+    <title>Asset Tracker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
-            <span class="navbar-brand mb-0 h1">PC Tracker</span>
+            <span class="navbar-brand mb-0 h1">Asset Management </span>
         </div>
     </nav>
 
@@ -19,7 +19,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Scan PC Barcode</h5>
+                        <h5 class="card-title">Scan Item Barcode</h5>
                         <div id="reader"></div>
                         <button id="startButton" class="btn btn-primary mt-3">Start Scanner</button>
                     </div>
@@ -38,6 +38,40 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="technicianModal" tabindex="-1" aria-labelledby="technicianModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="technicianModalLabel">Assign to Technician</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="technicianForm">
+                <div class="mb-3">
+                  <label for="technicianName" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="technicianName" required>
+                </div>
+                <div class="mb-3">  
+                  <label for="technicianStaffNumber" class="form-label">Staff Number</label>
+                  <input type="text" class="form-control" id="technicianStaffNumber" required>
+                </div>
+                <div class="mb-3">
+                  <label for="technicianEmail" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="technicianEmail" required>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="assignButton">Assign</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
