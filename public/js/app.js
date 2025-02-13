@@ -77,7 +77,7 @@ document.getElementById('assignButton').addEventListener('click', function() {  
     console.log("Technician Email:", technicianEmail);
     console.log("Intake items", scannedItems); // Log before sending
 
-    fetch('http://localhost:3001/send-email' || 'https://scanningbackend-2.onrender.com/send-email', {
+    fetch('https://scanningbackend-2.onrender.com/send-email', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
