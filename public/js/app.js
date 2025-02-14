@@ -72,6 +72,19 @@ document.getElementById('assignButton').addEventListener('click', function() {  
 
     // Disable the Assign button
     this.disabled = true; 
+
+    // Update scannedItems with input values
+    const itemContainers = document.querySelectorAll('.item-container');
+    itemContainers.forEach(container => {
+        const index = container.dataset.index;
+        const modelInput = container.querySelector('.model-input');
+        const locationInput = container.querySelector('.location-input');
+        const statusInput = container.querySelector('.status-input');
+
+        scannedItems[index].model = modelInput.value;
+        scannedItems[index].location = locationInput.value;
+        scannedItems[index].status = statusInput.value;
+    });
  
     console.log("Technician Name:", technicianName);
     console.log("Technician Email:", technicianEmail);
