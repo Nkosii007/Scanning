@@ -132,6 +132,7 @@ document.getElementById('assignButton').addEventListener('click', function() {  
     itemContainers.forEach(container => {
         const index = container.dataset.index;
 
+        const tagNumberInput = container.querySelector('p strong');
         const categoryInput = container.querySelector('.category-input');
         const subcategoryInput = container.querySelector('.subcategory-input');
         const descriptionInput = container.querySelector('.description-input');
@@ -145,6 +146,7 @@ document.getElementById('assignButton').addEventListener('click', function() {  
         // scannedItems[index].status = statusInput.value;
     // Update the scannedItems array
     scannedItems[index] = {
+        tagNumber:tagNumberInput.textContent.split(':'),
         category: categoryInput.value,
         subcategory: subcategoryInput.value,
         description: descriptionInput.value,
