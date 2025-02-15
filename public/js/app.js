@@ -47,8 +47,8 @@ function displayPCDetails(pc, index) {
             </select>
         </label>
 
-        <label><strong>Description:</strong> <input type="text" class="model-input" placeholder="Enter item description"></label>
-        <label><strong>Model:</strong> <input type="text" class="model-input" placeholder="Enter item model"></label>
+        <label><strong>Description:</strong> <input type="text" class="description-input" placeholder="Enter item description"></label>
+        
         <label><strong>Location:</strong> <input type="text" class="location-input" placeholder="Enter item location"></label>
         
         <label><strong>Condition:</strong>
@@ -61,14 +61,20 @@ function displayPCDetails(pc, index) {
         </label>
 
         <label><strong>Current Date:</strong>
-            <input type="text" class="model-input" value="${new Date().toISOString().split('T')[0]}" readonly>
+            <input type="text" class="current-date-input" value="${new Date().toISOString().split('T')[0]}" readonly>
         </label>
 
-        <label><strong>Procurement Date:</strong> <input type="date" class="model-input"></label>
+        <label><strong>Procurement Date:</strong> <input type="date" class="procurement-date-input"></label>
     </div>
 `;
 
 detailsDiv.appendChild(newDetails);
+
+// Event listener for category selection
+const categorySelect = newDetails.querySelector('.category-input');
+categorySelect.addEventListener('change', function() {
+    updateSubcategories(this); // Call updateSubcategories when the category changes
+});
 
 // Function to update subcategories dynamically
 function updateSubcategories(categorySelect) {
@@ -125,13 +131,29 @@ document.getElementById('assignButton').addEventListener('click', function() {  
     const itemContainers = document.querySelectorAll('.item-container');
     itemContainers.forEach(container => {
         const index = container.dataset.index;
-        const modelInput = container.querySelector('.model-input');
-        const locationInput = container.querySelector('.location-input');
-        const statusInput = container.querySelector('.status-input');
 
-        scannedItems[index].model = modelInput.value;
-        scannedItems[index].location = locationInput.value;
-        scannedItems[index].status = statusInput.value;
+        const categoryInput = container.querySelector('.category-input');
+        const subcategoryInput = container.querySelector('.subcategory-input');
+        const descriptionInput = container.querySelector('.description-input');
+        const locationInput = container.querySelector('.location-input');
+        const conditionInput = container.querySelector('.condition-input');
+        const currentDateInput = container.querySelector('.current-date-input');
+        const procurementDateInput = container.querySelector('.procurement-date-input');
+
+        // scannedItems[index].model = modelInput.value;
+        // scannedItems[index].location = locationInput.value;
+        // scannedItems[index].status = statusInput.value;
+    // Update the scannedItems array
+    scannedItems[index] = {
+        category: categoryInput.value,
+        subcategory: subcategoryInput.value,
+        description: descriptionInput.value,
+        location: locationInput.value,
+        condition: conditionInput.value,
+        currentDate: currentDateInput.value,
+        procurementDate: procurementDateInput.value
+    };
+
     });
  
     console.log("Technician Name:", technicianName);
