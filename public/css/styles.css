@@ -59,3 +59,10 @@ input[type="text"] {
     padding: 5px;
     margin-bottom: 10px;
 }
+
+select{
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 10px;
+}

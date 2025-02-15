@@ -29,15 +29,65 @@ function displayPCDetails(pc, index) {
     newDetails.innerHTML = `
     <div class="result">
         <span class="remove-icon">&minus;</span>
-        <p><strong>Barcode:</strong> ${pc.barcode}</p>
-        <label><strong>Model:</strong> <input type="text" value="" class="model-input" placeholder="Enter item model"></label>
-        <label><strong>Location:</strong> <input type="text" value="" class="location-input" placeholder="Enter item location"></label>
-        <label><strong>Status:</strong> <input type="text" value="" class="status-input" placeholder="Enter item status"></label>
+        <p><strong>Tag No.:</strong> ${pc.barcode}</p>
+
+        
+        <label><strong>Category:</strong>
+            <select class="category-input" onchange="updateSubcategories(this)">
+                <option value="">Select Category</option>
+                <option value="Computer">Computer</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Equipment">Equipment</option>
+            </select>
+        </label>
+
+        <label><strong>Sub Category:</strong>
+            <select class="subcategory-input">
+                <option value="">Select Subcategory</option>
+            </select>
+        </label>
+
+        <label><strong>Description:</strong> <input type="text" class="model-input" placeholder="Enter item description"></label>
+        <label><strong>Model:</strong> <input type="text" class="model-input" placeholder="Enter item model"></label>
+        <label><strong>Location:</strong> <input type="text" class="location-input" placeholder="Enter item location"></label>
+        
+        <label><strong>Condition:</strong>
+            <select class="condition-input">
+                <option value="">Select Condition</option>
+                <option value="Working">Working</option>
+                <option value="Not Working">Not Working</option>
+                <option value=""></option>
+            </select>
+        </label>
+
+        <label><strong>Status:</strong> <input type="text" class="status-input" placeholder="Enter item status"></label>
+        
+        <label><strong>Current Date:</strong>
+            <input type="text" class="model-input" value="${new Date().toISOString().split('T')[0]}" readonly>
+        </label>
+
+        <label><strong>Procurement Date:</strong> <input type="date" class="model-input"></label>
     </div>
 `;
 
-    detailsDiv.appendChild(newDetails);
+detailsDiv.appendChild(newDetails);
+
+// Function to update subcategories dynamically
+function updateSubcategories(categorySelect) {
+    const subcategorySelect = categorySelect.parentElement.nextElementSibling.querySelector('.subcategory-input');
+    const selectedCategory = categorySelect.value;
+    
+    const subcategories = {
+        "Computer": ["Laptop", "Monitor", "Tower", "Other"],
+        "Furniture": ["Chair", "Table", "Desk", "Cupboard", "Other"],
+        "Equipment": ["Other"]
+    };
+
+    subcategorySelect.innerHTML = subcategories[selectedCategory]
+        ? subcategories[selectedCategory].map(sub => `<option value="${sub}">${sub}</option>`).join('')
+        : '<option value="">Select Subcategory</option>';
 }
+
 
 document.addEventListener('click', function(event) {
     if (event.target.classList.contains('remove-icon')) {
@@ -132,3 +182,4 @@ document.getElementById('assignButton').addEventListener('click', function() {  
         
     });
 });
+}
