@@ -29,7 +29,7 @@ function displayPCDetails(pc, index) {
     newDetails.innerHTML = `
     <div class="result">
         <span class="remove-icon">&minus;</span>
-        <p><strong>Tag No.:</strong> ${pc.barcode}</p>
+        <p><strong>Tag Number:</strong> ${pc.barcode}</p>
 
         
         <label><strong>Category:</strong>
@@ -60,8 +60,6 @@ function displayPCDetails(pc, index) {
             </select>
         </label>
 
-        <label><strong>Status:</strong> <input type="text" class="status-input" placeholder="Enter item status"></label>
-        
         <label><strong>Current Date:</strong>
             <input type="text" class="model-input" value="${new Date().toISOString().split('T')[0]}" readonly>
         </label>
