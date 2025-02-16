@@ -132,7 +132,7 @@ document.getElementById('assignButton').addEventListener('click', function() {  
     itemContainers.forEach(container => {
         const index = container.dataset.index;
 
-        const tagNumberInput = container.querySelector('p');
+        const tagNumberElement = container.querySelector('p');
         const categoryInput = container.querySelector('.category-input');
         const subcategoryInput = container.querySelector('.subcategory-input');
         const descriptionInput = container.querySelector('.description-input');
