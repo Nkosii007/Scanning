@@ -29,7 +29,7 @@ function displayPCDetails(pc, index) {
     newDetails.innerHTML = `
     <div class="result">
         <span class="remove-icon">&minus;</span>
-        <p><strong>Tag Number:</strong> ${pc.barcode || pc.tagNumber}</p>
+        <p><strong>Tag Number:</strong> ${pc.barcode}</p>
 
         
         <label><strong>Category:</strong>
@@ -146,7 +146,7 @@ document.getElementById('assignButton').addEventListener('click', function() {  
         // scannedItems[index].status = statusInput.value;
     // Update the scannedItems array
     scannedItems[index] = {
-        tagNumber: tagNumberInput.textContent.split(': '),
+        barcode: tagNumberInput.textContent,
         category: categoryInput.value,
         subcategory: subcategoryInput.value,
         description: descriptionInput.value,
