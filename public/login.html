@@ -83,7 +83,7 @@
         // Password validation
         const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
         if (!passRegex.test(pass)) {
-            document.getElementById("password-error").textContent = "Password must have at least 8 characters, an uppercase letter, a number, and a special character.";
+            document.getElementById("password-error").textContent = "Incorrect Password Format";    
             isValid = false;
         }
 
