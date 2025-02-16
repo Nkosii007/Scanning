@@ -146,7 +146,7 @@ document.getElementById('assignButton').addEventListener('click', function() {  
         // scannedItems[index].status = statusInput.value;
     // Update the scannedItems array
     scannedItems[index] = {
-        barcode: tagNumberInput.textContent,
+        barcode: tagNumberInput.textContent.split(': ')[1],
         category: categoryInput.value,
         subcategory: subcategoryInput.value,
         description: descriptionInput.value,
