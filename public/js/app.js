@@ -117,12 +117,9 @@ document.getElementById('scan-complete').addEventListener('click', function() {
 
 let assignButtonEventAttached = false; // Add a flag
 
-if (!assignButtonEventAttached) {
-    assignButtonEventAttached = true; // Prevent further bindings
-
 document.getElementById('assignButton').addEventListener('click', function assignButtonHandler() {
-    if (this.disabled) return; // Prevent multiple clicks
-    this.disabled = true; // Disable immediately to prevent duplicates
+    if (assignButtonEventAttached) return; // Skip if already attached
+    assignButtonEventAttached = true;
 
     const technicianName = document.getElementById('technicianName').value;
     const technicianStaffNumber = document.getElementById('technicianStaffNumber').value;
@@ -130,7 +127,6 @@ document.getElementById('assignButton').addEventListener('click', function assig
 
     if (technicianName.trim() === "" || technicianEmail.trim() === "" || technicianStaffNumber.trim() === "") {
         alert("Please fill in all the fields");
-        this.disabled = false; // Re-enable the button
         return;
     }
 
@@ -220,5 +216,4 @@ document.getElementById('assignButton').addEventListener('click', function assig
         this.disabled = false; // Re-enable on error
     });
 });
-}
 }
