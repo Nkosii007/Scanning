@@ -114,7 +114,13 @@ document.getElementById('scan-complete').addEventListener('click', function() {
     technicianModal.show();
 });
 
-document.getElementById('assignButton').addEventListener('click', function() {  // Only ONE event listener
+
+let assignButtonEventAttached = false; // Add a flag
+
+document.getElementById('assignButton').addEventListener('click', function assignButtonHandler() {
+    if (assignButtonEventAttached) return; // Skip if already attached
+    assignButtonEventAttached = true;
+
     const technicianName = document.getElementById('technicianName').value;
     const technicianStaffNumber = document.getElementById('technicianStaffNumber').value;
     const technicianEmail = document.getElementById('technicianEmail').value;
@@ -207,7 +213,7 @@ document.getElementById('assignButton').addEventListener('click', function() {  
     })
   .catch(error => {
         console.error('Error:', error);
-        
+        this.disabled = false; // Re-enable on error
     });
 });
 }
