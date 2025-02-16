@@ -145,14 +145,14 @@ document.getElementById('assignButton').addEventListener('click', function() {  
         // scannedItems[index].location = locationInput.value;
         // scannedItems[index].status = statusInput.value;
 
-            // Extract barcode (everything after "Tag Number:")
+    // Extract barcode (everything after "Tag Number:")
     const tagNumberContent = tagNumberElement.textContent.trim();
     const tagNumber = tagNumberContent.replace('Tag Number:', '').trim();
 
 
     // Update the scannedItems array
     scannedItems[index] = {
-        barcode: tagNumber,
+        tagNumber: tagNumber,
         category: categoryInput.value,
         subcategory: subcategoryInput.value,
         description: descriptionInput.value,
