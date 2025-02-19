@@ -86,6 +86,10 @@ img{
     cursor: pointer;
   }
 
+  #show-password {
+    cursor: pointer;
+  }
+
   .role-selection {
     display: inline-flex;
     flex-direction: row;
