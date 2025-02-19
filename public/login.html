@@ -98,7 +98,12 @@
 
         // Login API request
         try {
-            const response = await fetch("http://127.0.0.1:3001/login" || "https://scanningbackend-2.onrender.com/login", {
+
+            const apiUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
+             ? "http://127.0.0.1:3001/login" 
+             : "https://scanningbackend-2.onrender.com/login";
+
+            const response = await fetch(apiUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password: pass, role }),
