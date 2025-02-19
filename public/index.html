@@ -8,6 +8,37 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <script>
+        document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        // If not logged in, redirect to login page
+        window.location.href = '/login.html';
+        return;
+      }
+      
+      // Optional: verify token with backend
+      fetch("https://scanningbackend-2.onrender.com/verify-token", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Invalid token');
+        }
+      })
+      .catch(() => {
+        // If token is invalid, clear it and redirect to login
+        localStorage.removeItem('token');
+        localStorage.removeItem('userRole');
+        window.location.href = '/login.html';
+      });
+    });
+  </script>
+  
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
             <span class="navbar-brand mb-0 h1">Asset Management </span>

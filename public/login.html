@@ -111,9 +111,18 @@
 
             const data = await response.json();
             if (response.ok) {
-                alert(`Login successful as ${data.role}`);
-                localStorage.setItem("token", data.token); // Store JWT for future authentication
+                // alert(`Login successful as ${data.role}`);
+                // localStorage.setItem("token", data.token); // Store JWT for future authentication
+                // window.location.href = '/index.html';
+                
+                // Store the token
+                localStorage.setItem("token", data.token);
+                // Store role if needed for different page access
+                localStorage.setItem("userRole", data.role);
+                // Redirect to main page after successful login
                 window.location.href = '/index.html';
+                alert(`Login successful as ${data.role}`);
+                
             } else {
                 alert(data.message);
             }
