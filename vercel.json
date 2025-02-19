@@ -1,0 +1,6 @@
+{
+    "rewrites": [
+      { "source": "/", "destination": "/public/login.html" },
+      { "source": "/:path*", "destination": "/public/$1" }
+    ]
+  }

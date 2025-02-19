@@ -108,6 +108,7 @@
             if (response.ok) {
                 alert(`Login successful as ${data.role}`);
                 localStorage.setItem("token", data.token); // Store JWT for future authentication
+                window.location.href = '/index.html';
             } else {
                 alert(data.message);
             }
