@@ -32,7 +32,7 @@
         
         <div class="flex-row">
           <div>
-          <input type="checkbox">
+          <input type="checkbox" id="remember-me">
           <label for="checkbox">Remember me </label>
           </div>
           <span class="span">Forgot password?</span>
@@ -61,6 +61,18 @@
         const passwordInput = document.getElementById("show-password");
         const password = document.getElementById("password-input");
 
+        const recall_user = document.getElementById("remember-me");
+
+        recall_user.addEventListener("click", () => {
+            if (recall_user.checked) {
+                localStorage.setItem("email", document.getElementById("email-input").value);
+                localStorage.setItem("password", document.getElementById("password-input").value);
+            } else {    
+                localStorage.removeItem("email");
+                localStorage.removeItem("password");
+            }
+        });
+
         passwordInput.addEventListener("click", () => {
             if (password.type === "password") {
                 password.type = "text";
@@ -68,6 +80,7 @@
                 password.type = "password";
             }
         });
+
 
 
     document.addEventListener("DOMContentLoaded", function () {
