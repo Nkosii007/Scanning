@@ -1,6 +1,9 @@
 {
-    "rewrites": [
-      { "source": "/", "destination": "/login.html" },
-      { "source": "/:path*", "destination": "/:path*" }
-    ]
-  }
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/login.html",
+      "permanent": true
+    }
+  ]
+}
