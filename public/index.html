@@ -11,9 +11,10 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const token = localStorage.getItem('token');
+      console.log('Token found in localStorage:', token); // Log the token
 
       if (!token) {
-        // If not logged in, redirect to login page
+        console.log('No token found, redirecting to login'); // Log the redirect
         window.location.href = '/login.html';
         return;
       }
@@ -27,12 +28,14 @@
       })
     .then(response => {
         if (!response.ok) {
+          console.error('Token verification failed:', response.status, response.statusText); // Log the error
           throw new Error('Invalid token');
         }
-        // Token is valid
+        console.log('Token verified successfully'); // Log the success
+        // Token is valid, proceed with loading the dashboard content
       })
-    .catch(() => {
-        // If token is invalid, clear it and redirect to login
+    .catch(error => {
+        console.error('Token verification error:', error); // Log the error
         localStorage.removeItem('token');
         localStorage.removeItem('userRole');
         window.location.href = '/login.html';
