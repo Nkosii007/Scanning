@@ -9,33 +9,34 @@
 </head>
 <body>
   <script>
-        document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
       const token = localStorage.getItem('token');
-      
+
       if (!token) {
         // If not logged in, redirect to login page
         window.location.href = '/login.html';
         return;
       }
-      
-      // // verify token with backend
-      // fetch("https://scanningbackend-2.onrender.com/verify-token", {
-      //   method: "GET",
-      //   headers: {
-      //     "Authorization": `Bearer ${token}`
-      //   }
-      // })
-      // .then(response => {
-      //   if (!response.ok) {
-      //     throw new Error('Invalid token');
-      //   }
-      // })
-      // .catch(() => {
-      //   // If token is invalid, clear it and redirect to login
-      //   localStorage.removeItem('token');
-      //   localStorage.removeItem('userRole');
-      //   window.location.href = '/login.html';
-      // });
+
+      // verify token with backend
+      fetch("https://scanningbackend-2.onrender.com/verify-token", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+    .then(response => {
+        if (!response.ok) {
+          throw new Error('Invalid token');
+        }
+        // Token is valid
+      })
+    .catch(() => {
+        // If token is invalid, clear it and redirect to login
+        localStorage.removeItem('token');
+        localStorage.removeItem('userRole');
+        window.location.href = '/login.html';
+      });
     });
   </script>
 
