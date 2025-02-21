@@ -115,8 +115,11 @@ document.getElementById('scan-complete').addEventListener('click', function() {
 });
 
 
-document.getElementById('assignButton').addEventListener('click', function () {
-    console.log("Assign button clicked"); // Debugging log
+let assignButtonEventAttached = false; // Add a flag
+
+document.getElementById('assignButton').addEventListener('click', function assignButtonHandler() {
+    if (assignButtonEventAttached) return; // Skip if already attached
+    assignButtonEventAttached = true;
 
     const technicianName = document.getElementById('technicianName').value;
     const technicianStaffNumber = document.getElementById('technicianStaffNumber').value;
@@ -127,62 +130,90 @@ document.getElementById('assignButton').addEventListener('click', function () {
         return;
     }
 
-    this.disabled = true; // Disable button
+    // Disable the Assign button
+    this.disabled = true; 
 
+    // Update scannedItems with input values
     const itemContainers = document.querySelectorAll('.item-container');
-    scannedItems = [];
-
     itemContainers.forEach(container => {
-        const tagNumber = container.querySelector('p').textContent.replace('Tag Number:', '').trim();
-        scannedItems.push({
-            tagNumber: tagNumber,
-            category: container.querySelector('.category-input').value,
-            subcategory: container.querySelector('.subcategory-input').value,
-            description: container.querySelector('.description-input').value,
-            location: container.querySelector('.location-input').value,
-            condition: container.querySelector('.condition-input').value,
-            currentDate: container.querySelector('.current-date-input').value,
-            procurementDate: container.querySelector('.procurement-date-input').value
-        });
-    });
+        const index = container.dataset.index;
 
-    console.log("Sending data:", { technicianName, technicianStaffNumber, technicianEmail, scannedItems });
+        const tagNumberElement = container.querySelector('p');
+        const categoryInput = container.querySelector('.category-input');
+        const subcategoryInput = container.querySelector('.subcategory-input');
+        const descriptionInput = container.querySelector('.description-input');
+        const locationInput = container.querySelector('.location-input');
+        const conditionInput = container.querySelector('.condition-input');
+        const currentDateInput = container.querySelector('.current-date-input');
+        const procurementDateInput = container.querySelector('.procurement-date-input');
+
+        // scannedItems[index].model = modelInput.value;
+        // scannedItems[index].location = locationInput.value;
+        // scannedItems[index].status = statusInput.value;
+
+    // Extract barcode (everything after "Tag Number:")
+    const tagNumberContent = tagNumberElement.textContent.trim();
+    const tagNumber = tagNumberContent.replace('Tag Number:', '').trim();
+
+
+    // Update the scannedItems array
+    scannedItems[index] = {
+        tagNumber: tagNumber,
+        category: categoryInput.value,
+        subcategory: subcategoryInput.value,
+        description: descriptionInput.value,
+        location: locationInput.value,
+        condition: conditionInput.value,
+        currentDate: currentDateInput.value,
+        procurementDate: procurementDateInput.value
+    };
+
+    });
+ 
+    console.log("Technician Name:", technicianName);
+    console.log("Technician Email:", technicianEmail);
+    console.log("Intake items", scannedItems); // Log before sending
 
     fetch('https://scanningbackend-2.onrender.com/send-email', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ technicianName, technicianStaffNumber, technicianEmail, scannedItems })
     })
-    .then(response => {
+  .then(response => {
         if (!response.ok) {
             return response.json().then(err => {
-                alert("Error sending intake details: " + err.error);
-                throw new Error(err.error);
+                alert("Error sending intake details: " + err.error); // More specific error message
+                this.disabled = false; // Re-enable the button
+                throw new Error(err.error)
             });
         }
         return response.json();
     })
-    .then(data => {
+  .then(data => {
         console.log('Success:', data.message);
-        scannedItems = [];
+        scannedItems =[]; // Clear the array
         itemIndex = 0;
         document.getElementById('pc-details').innerHTML = "";
+        document.getElementById('result').classList.add('d-none');
         alert("Intake details sent to technician");
 
+        // Clear the form fields
         document.getElementById('technicianName').value = "";
         document.getElementById('technicianStaffNumber').value = "";
         document.getElementById('technicianEmail').value = "";
 
-        this.disabled = false; // Re-enable button
+        this.disabled = false; // Re-enable on success
 
+        // Close the modal after successful response
         const technicianModalEl = document.getElementById('technicianModal');
         const technicianModal = bootstrap.Modal.getInstance(technicianModalEl);
         technicianModal.hide();
     })
-    .catch(error => {
+  .catch(error => {
         console.error('Error:', error);
-        alert("Failed to send data. Check console for errors.");
-        this.disabled = false;
+        this.disabled = false; // Re-enable on error
     });
 });
 }
