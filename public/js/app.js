@@ -114,23 +114,19 @@ document.getElementById('scan-complete').addEventListener('click', function() {
     technicianModal.show();
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const assignButton = document.getElementById("assignButton");
 
-    if (!assignButton) {
-        console.error("Assign button not found!");
-        return;
-    }
+document.addEventListener("click", function (event) {
+    if (event.target && event.target.id === "assignButton") {
+        console.log("🚀 Assign button clicked!"); // Debugging log
 
-    assignButton.addEventListener("click", function () {
-        console.log("Assign button clicked!"); // Debugging log
+        const assignButton = event.target;
 
         if (assignButton.disabled) {
             console.warn("Assign button is already disabled, skipping...");
             return;
         }
 
-        assignButton.disabled = true; // Disable to prevent double submission
+        assignButton.disabled = true;
 
         const technicianName = document.getElementById('technicianName')?.value.trim();
         const technicianStaffNumber = document.getElementById('technicianStaffNumber')?.value.trim();
@@ -144,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Collect scanned items
         const scannedItems = [];
-        document.querySelectorAll('.item-container').forEach((container, index) => {
+        document.querySelectorAll('.item-container').forEach((container) => {
             const tagNumberText = container.querySelector('p')?.textContent.trim() || "";
             const tagNumber = tagNumberText.replace('Tag Number:', '').trim();
 
@@ -188,7 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('technicianStaffNumber').value = "";
             document.getElementById('technicianEmail').value = "";
 
-            assignButton.disabled = false; // Re-enable button
+            assignButton.disabled = false;
 
             // Close modal
             const technicianModalEl = document.getElementById('technicianModal');
@@ -200,8 +196,8 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => {
             console.error('Error:', error);
             alert("An error occurred, please try again.");
-            assignButton.disabled = false; // Re-enable button
+            assignButton.disabled = false;
         });
-    });
+    }
 });
 }
