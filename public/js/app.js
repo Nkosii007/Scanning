@@ -98,9 +98,13 @@ function updateSubcategories(categorySelect) {
 
 // Remove item function
 function removeItem(index) {
-    scannedItems.splice(index, 1);
-    refreshScannedItems();
+    // Remove from scannedItems array
+    scannedItems = scannedItems.filter((_, i) => i !== index);
+
+    // Remove only the specific item's DOM element
+    document.querySelector(`.item-container[data-index="${index}"]`)?.remove();
 }
+
 
 // Refresh scanned items
 function refreshScannedItems() {
