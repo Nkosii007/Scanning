@@ -114,59 +114,49 @@ document.getElementById('scan-complete').addEventListener('click', function() {
     technicianModal.show();
 });
 
-
 document.addEventListener("DOMContentLoaded", function () {
     const assignButton = document.getElementById("assignButton");
 
-    if (!assignButton) return; // Ensure button exists
+    if (!assignButton) return; // Ensure the button exists
 
-    // Remove existing event listeners before adding a new one
-    assignButton.replaceWith(assignButton.cloneNode(true)); // Removes all listeners
-    const newAssignButton = document.getElementById("assignButton"); // Get the new button
-     
+    // Remove previous event listeners by replacing the button
+    const newAssignButton = assignButton.cloneNode(true);
+    assignButton.parentNode.replaceChild(newAssignButton, assignButton);
+
+    // Add click event listener
     newAssignButton.addEventListener("click", function () {
+        console.log("Assign button clicked!"); // Debugging log
+
         if (newAssignButton.disabled) return; // Prevent double submission
-        newAssignButton.disabled = true; // Disable to prevent multiple clicks
+        newAssignButton.disabled = true; // Disable the button to prevent multiple clicks
 
-        const technicianName = document.getElementById('technicianName').value;
-        const technicianStaffNumber = document.getElementById('technicianStaffNumber').value;
-        const technicianEmail = document.getElementById('technicianEmail').value;
+        const technicianName = document.getElementById('technicianName').value.trim();
+        const technicianStaffNumber = document.getElementById('technicianStaffNumber').value.trim();
+        const technicianEmail = document.getElementById('technicianEmail').value.trim();
 
-        if (technicianName.trim() === "" || technicianEmail.trim() === "" || technicianStaffNumber.trim() === "") {
-            alert("Please fill in all the fields");
-            newAssignButton.disabled = false; // Re-enable
+        if (!technicianName || !technicianStaffNumber || !technicianEmail) {
+            alert("Please fill in all the fields.");
+            newAssignButton.disabled = false;
             return;
         }
 
-        // Update scannedItems array with input values
+        // Collect scanned items
         const scannedItems = [];
-        document.querySelectorAll('.item-container').forEach((container, index) => {
-            const tagNumberElement = container.querySelector('p');
-            const categoryInput = container.querySelector('.category-input');
-            const subcategoryInput = container.querySelector('.subcategory-input');
-            const descriptionInput = container.querySelector('.description-input');
-            const locationInput = container.querySelector('.location-input');
-            const conditionInput = container.querySelector('.condition-input');
-            const currentDateInput = container.querySelector('.current-date-input');
-            const procurementDateInput = container.querySelector('.procurement-date-input');
-
-            const tagNumber = tagNumberElement.textContent.replace('Tag Number:', '').trim();
-
+        document.querySelectorAll('.item-container').forEach(container => {
+            const tagNumber = container.querySelector('p').textContent.replace('Tag Number:', '').trim();
             scannedItems.push({
-                tagNumber,
-                category: categoryInput.value,
-                subcategory: subcategoryInput.value,
-                description: descriptionInput.value,
-                location: locationInput.value,
-                condition: conditionInput.value,
-                currentDate: currentDateInput.value,
-                procurementDate: procurementDateInput.value
+                tagNumber: tagNumber,
+                category: container.querySelector('.category-input').value,
+                subcategory: container.querySelector('.subcategory-input').value,
+                description: container.querySelector('.description-input').value,
+                location: container.querySelector('.location-input').value,
+                condition: container.querySelector('.condition-input').value,
+                currentDate: container.querySelector('.current-date-input').value,
+                procurementDate: container.querySelector('.procurement-date-input').value
             });
         });
 
-        console.log("Technician Name:", technicianName);
-        console.log("Technician Email:", technicianEmail);
-        console.log("Intake items", scannedItems);
+        console.log("Sending Data:", { technicianName, technicianStaffNumber, technicianEmail, scannedItems });
 
         fetch('https://scanningbackend-2.onrender.com/send-email', {
             method: 'POST',
@@ -177,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!response.ok) {
                 return response.json().then(err => {
                     alert("Error sending intake details: " + err.error);
-                    newAssignButton.disabled = false; // Re-enable
+                    newAssignButton.disabled = false;
                     throw new Error(err.error);
                 });
             }
@@ -187,14 +177,14 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log('Success:', data.message);
             alert("Intake details sent to technician");
 
-            // Reset form fields
+            // Clear form fields
             document.getElementById('pc-details').innerHTML = "";
             document.getElementById('result').classList.add('d-none');
             document.getElementById('technicianName').value = "";
             document.getElementById('technicianStaffNumber').value = "";
             document.getElementById('technicianEmail').value = "";
 
-            newAssignButton.disabled = false; // Re-enable
+            newAssignButton.disabled = false; // Re-enable button
 
             // Close modal
             const technicianModalEl = document.getElementById('technicianModal');
@@ -204,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => {
             console.error('Error:', error);
             alert("An error occurred, please try again.");
-            newAssignButton.disabled = false; // Re-enable
+            newAssignButton.disabled = false; // Re-enable button
         });
     });
 });
