@@ -117,42 +117,46 @@ document.getElementById('scan-complete').addEventListener('click', function() {
 document.addEventListener("DOMContentLoaded", function () {
     const assignButton = document.getElementById("assignButton");
 
-    if (!assignButton) return; // Ensure the button exists
+    if (!assignButton) {
+        console.error("Assign button not found!");
+        return;
+    }
 
-    // Remove previous event listeners by replacing the button
-    const newAssignButton = assignButton.cloneNode(true);
-    assignButton.parentNode.replaceChild(newAssignButton, assignButton);
-
-    // Add click event listener
-    newAssignButton.addEventListener("click", function () {
+    assignButton.addEventListener("click", function () {
         console.log("Assign button clicked!"); // Debugging log
 
-        if (newAssignButton.disabled) return; // Prevent double submission
-        newAssignButton.disabled = true; // Disable the button to prevent multiple clicks
+        if (assignButton.disabled) {
+            console.warn("Assign button is already disabled, skipping...");
+            return;
+        }
 
-        const technicianName = document.getElementById('technicianName').value.trim();
-        const technicianStaffNumber = document.getElementById('technicianStaffNumber').value.trim();
-        const technicianEmail = document.getElementById('technicianEmail').value.trim();
+        assignButton.disabled = true; // Disable to prevent double submission
+
+        const technicianName = document.getElementById('technicianName')?.value.trim();
+        const technicianStaffNumber = document.getElementById('technicianStaffNumber')?.value.trim();
+        const technicianEmail = document.getElementById('technicianEmail')?.value.trim();
 
         if (!technicianName || !technicianStaffNumber || !technicianEmail) {
             alert("Please fill in all the fields.");
-            newAssignButton.disabled = false;
+            assignButton.disabled = false;
             return;
         }
 
         // Collect scanned items
         const scannedItems = [];
-        document.querySelectorAll('.item-container').forEach(container => {
-            const tagNumber = container.querySelector('p').textContent.replace('Tag Number:', '').trim();
+        document.querySelectorAll('.item-container').forEach((container, index) => {
+            const tagNumberText = container.querySelector('p')?.textContent.trim() || "";
+            const tagNumber = tagNumberText.replace('Tag Number:', '').trim();
+
             scannedItems.push({
                 tagNumber: tagNumber,
-                category: container.querySelector('.category-input').value,
-                subcategory: container.querySelector('.subcategory-input').value,
-                description: container.querySelector('.description-input').value,
-                location: container.querySelector('.location-input').value,
-                condition: container.querySelector('.condition-input').value,
-                currentDate: container.querySelector('.current-date-input').value,
-                procurementDate: container.querySelector('.procurement-date-input').value
+                category: container.querySelector('.category-input')?.value || "",
+                subcategory: container.querySelector('.subcategory-input')?.value || "",
+                description: container.querySelector('.description-input')?.value || "",
+                location: container.querySelector('.location-input')?.value || "",
+                condition: container.querySelector('.condition-input')?.value || "",
+                currentDate: container.querySelector('.current-date-input')?.value || "",
+                procurementDate: container.querySelector('.procurement-date-input')?.value || ""
             });
         });
 
@@ -167,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!response.ok) {
                 return response.json().then(err => {
                     alert("Error sending intake details: " + err.error);
-                    newAssignButton.disabled = false;
+                    assignButton.disabled = false;
                     throw new Error(err.error);
                 });
             }
@@ -184,17 +188,19 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('technicianStaffNumber').value = "";
             document.getElementById('technicianEmail').value = "";
 
-            newAssignButton.disabled = false; // Re-enable button
+            assignButton.disabled = false; // Re-enable button
 
             // Close modal
             const technicianModalEl = document.getElementById('technicianModal');
-            const technicianModal = bootstrap.Modal.getInstance(technicianModalEl);
-            technicianModal.hide();
+            if (technicianModalEl) {
+                const technicianModal = bootstrap.Modal.getInstance(technicianModalEl);
+                technicianModal?.hide();
+            }
         })
         .catch(error => {
             console.error('Error:', error);
             alert("An error occurred, please try again.");
-            newAssignButton.disabled = false; // Re-enable button
+            assignButton.disabled = false; // Re-enable button
         });
     });
 });
