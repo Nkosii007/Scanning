@@ -115,105 +115,97 @@ document.getElementById('scan-complete').addEventListener('click', function() {
 });
 
 
-let assignButtonEventAttached = false; // Add a flag
+document.addEventListener("DOMContentLoaded", function () {
+    const assignButton = document.getElementById("assignButton");
 
-document.getElementById('assignButton').addEventListener('click', function assignButtonHandler() {
-    if (assignButtonEventAttached) return; // Skip if already attached
-    assignButtonEventAttached = true;
+    if (!assignButton) return; // Ensure button exists
 
-    const technicianName = document.getElementById('technicianName').value;
-    const technicianStaffNumber = document.getElementById('technicianStaffNumber').value;
-    const technicianEmail = document.getElementById('technicianEmail').value;
+    // Remove existing event listeners before adding a new one
+    assignButton.replaceWith(assignButton.cloneNode(true)); // Removes all listeners
+    const newAssignButton = document.getElementById("assignButton"); // Get the new button
+     
+    newAssignButton.addEventListener("click", function () {
+        if (newAssignButton.disabled) return; // Prevent double submission
+        newAssignButton.disabled = true; // Disable to prevent multiple clicks
 
-    if (technicianName.trim() === "" || technicianEmail.trim() === "" || technicianStaffNumber.trim() === "") {
-        alert("Please fill in all the fields");
-        return;
-    }
+        const technicianName = document.getElementById('technicianName').value;
+        const technicianStaffNumber = document.getElementById('technicianStaffNumber').value;
+        const technicianEmail = document.getElementById('technicianEmail').value;
 
-    // Disable the Assign button
-    this.disabled = true; 
-
-    // Update scannedItems with input values
-    const itemContainers = document.querySelectorAll('.item-container');
-    itemContainers.forEach(container => {
-        const index = container.dataset.index;
-
-        const tagNumberElement = container.querySelector('p');
-        const categoryInput = container.querySelector('.category-input');
-        const subcategoryInput = container.querySelector('.subcategory-input');
-        const descriptionInput = container.querySelector('.description-input');
-        const locationInput = container.querySelector('.location-input');
-        const conditionInput = container.querySelector('.condition-input');
-        const currentDateInput = container.querySelector('.current-date-input');
-        const procurementDateInput = container.querySelector('.procurement-date-input');
-
-        // scannedItems[index].model = modelInput.value;
-        // scannedItems[index].location = locationInput.value;
-        // scannedItems[index].status = statusInput.value;
-
-    // Extract barcode (everything after "Tag Number:")
-    const tagNumberContent = tagNumberElement.textContent.trim();
-    const tagNumber = tagNumberContent.replace('Tag Number:', '').trim();
-
-
-    // Update the scannedItems array
-    scannedItems[index] = {
-        tagNumber: tagNumber,
-        category: categoryInput.value,
-        subcategory: subcategoryInput.value,
-        description: descriptionInput.value,
-        location: locationInput.value,
-        condition: conditionInput.value,
-        currentDate: currentDateInput.value,
-        procurementDate: procurementDateInput.value
-    };
-
-    });
- 
-    console.log("Technician Name:", technicianName);
-    console.log("Technician Email:", technicianEmail);
-    console.log("Intake items", scannedItems); // Log before sending
-
-    fetch('https://scanningbackend-2.onrender.com/send-email', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ technicianName, technicianStaffNumber, technicianEmail, scannedItems })
-    })
-  .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => {
-                alert("Error sending intake details: " + err.error); // More specific error message
-                this.disabled = false; // Re-enable the button
-                throw new Error(err.error)
-            });
+        if (technicianName.trim() === "" || technicianEmail.trim() === "" || technicianStaffNumber.trim() === "") {
+            alert("Please fill in all the fields");
+            newAssignButton.disabled = false; // Re-enable
+            return;
         }
-        return response.json();
-    })
-  .then(data => {
-        console.log('Success:', data.message);
-        scannedItems =[]; // Clear the array
-        itemIndex = 0;
-        document.getElementById('pc-details').innerHTML = "";
-        document.getElementById('result').classList.add('d-none');
-        alert("Intake details sent to technician");
 
-        // Clear the form fields
-        document.getElementById('technicianName').value = "";
-        document.getElementById('technicianStaffNumber').value = "";
-        document.getElementById('technicianEmail').value = "";
+        // Update scannedItems array with input values
+        const scannedItems = [];
+        document.querySelectorAll('.item-container').forEach((container, index) => {
+            const tagNumberElement = container.querySelector('p');
+            const categoryInput = container.querySelector('.category-input');
+            const subcategoryInput = container.querySelector('.subcategory-input');
+            const descriptionInput = container.querySelector('.description-input');
+            const locationInput = container.querySelector('.location-input');
+            const conditionInput = container.querySelector('.condition-input');
+            const currentDateInput = container.querySelector('.current-date-input');
+            const procurementDateInput = container.querySelector('.procurement-date-input');
 
-        this.disabled = false; // Re-enable on success
+            const tagNumber = tagNumberElement.textContent.replace('Tag Number:', '').trim();
 
-        // Close the modal after successful response
-        const technicianModalEl = document.getElementById('technicianModal');
-        const technicianModal = bootstrap.Modal.getInstance(technicianModalEl);
-        technicianModal.hide();
-    })
-  .catch(error => {
-        console.error('Error:', error);
-        this.disabled = false; // Re-enable on error
+            scannedItems.push({
+                tagNumber,
+                category: categoryInput.value,
+                subcategory: subcategoryInput.value,
+                description: descriptionInput.value,
+                location: locationInput.value,
+                condition: conditionInput.value,
+                currentDate: currentDateInput.value,
+                procurementDate: procurementDateInput.value
+            });
+        });
+
+        console.log("Technician Name:", technicianName);
+        console.log("Technician Email:", technicianEmail);
+        console.log("Intake items", scannedItems);
+
+        fetch('https://scanningbackend-2.onrender.com/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ technicianName, technicianStaffNumber, technicianEmail, scannedItems })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    alert("Error sending intake details: " + err.error);
+                    newAssignButton.disabled = false; // Re-enable
+                    throw new Error(err.error);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data.message);
+            alert("Intake details sent to technician");
+
+            // Reset form fields
+            document.getElementById('pc-details').innerHTML = "";
+            document.getElementById('result').classList.add('d-none');
+            document.getElementById('technicianName').value = "";
+            document.getElementById('technicianStaffNumber').value = "";
+            document.getElementById('technicianEmail').value = "";
+
+            newAssignButton.disabled = false; // Re-enable
+
+            // Close modal
+            const technicianModalEl = document.getElementById('technicianModal');
+            const technicianModal = bootstrap.Modal.getInstance(technicianModalEl);
+            technicianModal.hide();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("An error occurred, please try again.");
+            newAssignButton.disabled = false; // Re-enable
+        });
     });
 });
 }
