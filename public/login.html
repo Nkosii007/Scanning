@@ -51,8 +51,12 @@
         </div>
         
 
-        <button type="submit" class="button-submit" id="sign-in-button">Sign In</button>
-    
+        <!-- <button type="submit" class="button-submit" id="sign-in-button">Sign In</button> -->
+        <button type="submit" class="button-submit" id="sign-in-button">
+            <span id="btnText">Sign In</span>
+            <div class="loader" id="loader" style="display: none;"></div>
+        </button>
+          
         </div>
     </form>
     
@@ -121,6 +125,11 @@
         // Stop if validation fails
         if (!isValid) return;
 
+        // Show loader and disable button
+        document.getElementById("loader").style.display = "inline-block";
+        document.getElementById("btnText").textContent = "Signing In...";
+        document.getElementById("sign-in-button").disabled = true;
+
         // Login API request
         try {
 
@@ -151,6 +160,11 @@
         } catch (error) {
             console.error("Error:", error);
             alert("An error occurred while logging in.");
+        } finally {
+            // Hide loader and enable button
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("btnText").textContent = "Sign In";
+            document.getElementById("sign-in-button").disabled = false;
         }
     });
 });

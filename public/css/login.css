@@ -154,4 +154,31 @@ img{
     ;
   }
   
-      
+  .loader {
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #555;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+/* Responsive layout for mobile */
+@media (max-width: 500px) {
+  .form {
+      width: 90%;
+      padding: 20px;
+  }
+
+  img {
+      width: 100%;
+  }
+}
