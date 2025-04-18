@@ -212,6 +212,13 @@ function handleAssignButtonClick(assignButton) {
         itemIndex = 0;
         
         assignButton.disabled = false;
+        // Reset location
+        window.lastScannedLocation = "";
+        const locationDisplay = document.getElementById('current-location-display');
+        if (locationDisplay) {
+            locationDisplay.textContent = "📍 Current Location: Not Set";
+        }
+
 
         // Close modal
         const technicianModalEl = document.getElementById('technicianModal');
