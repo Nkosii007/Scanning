@@ -28,6 +28,12 @@ function onScanSuccess(decodedText, decodedResult) {
 
         alert(`Location set to: ${window.lastScannedLocation}`);
     } else {
+        // ❌ Block scanning if no location has been set
+        if (!window.lastScannedLocation || window.lastScannedLocation.trim() === "") {
+            alert("⚠️ Please scan a location QR code before scanning asset tags.");
+            return;
+        }
+        
         // It's an asset tag
         fetchPCDetails(decodedText); // This will use lastScannedLocation in app.js
         document.getElementById('result').classList.remove('d-none');
