@@ -190,6 +190,10 @@ function handleAssignButtonClick(assignButton) {
         document.getElementById('technicianStaffNumber').value = "";
         document.getElementById('technicianEmail').value = "";
 
+        // Reset data
+        scannedItems = [];
+        itemIndex = 0;
+        
         assignButton.disabled = false;
 
         // Close modal
