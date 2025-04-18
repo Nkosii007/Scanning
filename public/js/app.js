@@ -167,7 +167,7 @@ function handleAssignButtonClick(assignButton) {
     fetch('https://scanningbackend-2.onrender.com/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ technicianName, technicianStaffNumber, technicianEmail, collectedItems })
+        body: JSON.stringify({ technicianName, technicianStaffNumber, technicianEmail, scannedItems: collectedItems })
     })
     .then(response => {
         if (!response.ok) {
