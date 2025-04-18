@@ -1,4 +1,5 @@
 let html5QrcodeScanner;
+let lastScannedLocation = ""; // Shared location across files
 
 function initializeScanner() {
     html5QrcodeScanner = new Html5QrcodeScanner(
@@ -14,15 +15,30 @@ function onScanSuccess(decodedText, decodedResult) {
     html5QrcodeScanner.clear();
     html5QrcodeScanner = null;
 
-    fetchPCDetails(decodedText);
-    document.getElementById('result').classList.remove('d-none');
+    if (decodedText.startsWith("FAI:")) {
+        // It's a location QR
+        const locationPart = decodedText.split("|")[0].replace("FAI:", "").trim();
+        window.lastScannedLocation = locationPart;  // <-- Global access
+
+        // Optional: show location on screen
+        const locationDisplay = document.getElementById('current-location-display');
+        if (locationDisplay) {
+            locationDisplay.textContent = `📍 Current Location: ${window.lastScannedLocation}`;
+        }
+
+        alert(`Location set to: ${window.lastScannedLocation}`);
+    } else {
+        // It's an asset tag
+        fetchPCDetails(decodedText); // This will use lastScannedLocation in app.js
+        document.getElementById('result').classList.remove('d-none');
+    }
 }
 
 function onScanFailure(error) {
     console.warn(`Code scan error = ${error}`);
 }
 
-document.getElementById('add-button').addEventListener('click', function() {
+document.getElementById('add-button').addEventListener('click', function () {
     if (!html5QrcodeScanner) {
         initializeScanner();
     }
