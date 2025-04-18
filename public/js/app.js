@@ -96,7 +96,7 @@ function resetLocationInput(itemContainer) {
     if (locationDisplay) {
         locationDisplay.textContent = `📍 Current Location: None`;  // Optional: Update location display on the screen
     }
-
+}
 // Function to update subcategories dynamically
 function updateSubcategories(categorySelect) {
     const subcategorySelect = categorySelect.closest('.result').querySelector('.subcategory-input');
