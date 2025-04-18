@@ -51,6 +51,7 @@ function displayPCDetails(pc, index) {
         <label><strong>Description:</strong> <input type="text" class="description-input" placeholder="Enter item description"></label>
         <label><strong>Location:</strong> 
         <input type="text" class="location-input" value="${window.lastScannedLocation}" placeholder="Enter item location">
+        <span class="reset-location-icon" style="cursor: pointer; color: red; font-size: 20px; margin-left: 10px;">❌</span>
         </label>
 
         <label><strong>Condition:</strong>
@@ -80,7 +81,21 @@ function displayPCDetails(pc, index) {
     newDetails.querySelector('.remove-icon').addEventListener('click', function () {
         removeItem(index);
     });
+
+    // Reset Location Icon click event
+    newDetails.querySelector('.reset-location-icon').addEventListener('click', function () {
+        resetLocationInput(newDetails);
+    });
 }
+// Reset the location input field
+function resetLocationInput(itemContainer) {
+    const locationInput = itemContainer.querySelector('.location-input');
+    locationInput.value = '';  // Clear the location input field
+    window.lastScannedLocation = '';  // Reset global location variable
+    const locationDisplay = document.getElementById('current-location-display');
+    if (locationDisplay) {
+        locationDisplay.textContent = `📍 Current Location: None`;  // Optional: Update location display on the screen
+    }
 
 // Function to update subcategories dynamically
 function updateSubcategories(categorySelect) {
