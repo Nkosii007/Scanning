@@ -93,7 +93,7 @@ function resetLocationInput(itemContainer) {
     window.lastScannedLocation = '';  // Reset global location variable
     const locationDisplay = document.getElementById('current-location-display');
     if (locationDisplay) {
-        locationDisplay.textContent = `📍 Current Location: None`;  // Optional: Update location display on the screen
+        locationDisplay.textContent = `Current Location: None`;  
     }
 }
 // Function to update subcategories dynamically
@@ -144,7 +144,7 @@ document.addEventListener("click", function (event) {
 
 // Handle Assign Button Click
 function handleAssignButtonClick(assignButton) {
-    console.log("🚀 Assign button clicked!");
+    console.log("Assign button clicked!");
 
     if (assignButton.disabled) {
         console.warn("Assign button is already disabled, skipping...");
@@ -215,7 +215,7 @@ function handleAssignButtonClick(assignButton) {
         window.lastScannedLocation = "";
         const locationDisplay = document.getElementById('current-location-display');
         if (locationDisplay) {
-            locationDisplay.textContent = "📍 Current Location: Not Set";
+            locationDisplay.textContent = "Current Location: Not Set";
         }
 
 
