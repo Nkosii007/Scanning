@@ -2,12 +2,24 @@ let html5QrcodeScanner;
 let lastScannedLocation = ""; // Shared location across files
 
 function initializeScanner() {
-    html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader",
-        { fps: 10, qrbox: { width: 250, height: 250 } }
-    );
+    const config = {
+        fps: 10,
+        qrbox: { width: 250, height: 250 },
+        formatsToSupport: [
+            Html5QrcodeSupportedFormats.QR_CODE,
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.EAN_8,
+            Html5QrcodeSupportedFormats.UPC_A,
+            Html5QrcodeSupportedFormats.UPC_E,
+            Html5QrcodeSupportedFormats.CODE_39
+        ]
+    };
+
+    html5QrcodeScanner = new Html5QrcodeScanner("reader", config);
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 }
+
 
 document.getElementById('startButton').addEventListener('click', initializeScanner);
 
