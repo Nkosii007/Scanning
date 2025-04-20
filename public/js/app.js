@@ -206,7 +206,7 @@ function handleAssignButtonClick(assignButton) {
         // Send asset data to your MongoDB backend
         for (const item of collectedItems) {
             try {
-                const response = await fetch('https://your-backend-url.com/assets', {
+                const response = await fetch('https://scanningbackend-2.onrender.com/assets', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
