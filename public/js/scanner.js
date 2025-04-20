@@ -16,7 +16,7 @@ function initializeScanner() {
         ]
     };
 
-    html5QrcodeScanner = new Html5QrcodeScanner("reader", config, false);
+    html5QrcodeScanner = new Html5QrcodeScanner("reader", config);
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 }
 
