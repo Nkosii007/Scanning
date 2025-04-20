@@ -174,16 +174,21 @@ function handleAssignButtonClick(assignButton) {
             location: container?.querySelector('.location-input')?.value || "",
             condition: container?.querySelector('.condition-input')?.value || "",
             currentDate: container?.querySelector('.current-date-input')?.value || "",
-            procurementDate: container?.querySelector('.procurement-date-input')?.value || ""
+            procurementDate: container?.querySelector('.procurement-date-input')?.value || "",
+            addedBy: null // You can set this if user auth is integrated
         };
     });
 
-    console.log("Sending Data:", { technicianName, technicianStaffNumber, technicianEmail, collectedItems });
-
+    // First send email
     fetch('https://scanningbackend-2.onrender.com/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ technicianName, technicianStaffNumber, technicianEmail, scannedItems: collectedItems })
+        body: JSON.stringify({
+            technicianName,
+            technicianStaffNumber,
+            technicianEmail,
+            scannedItems: collectedItems
+        })
     })
     .then(response => {
         if (!response.ok) {
@@ -195,40 +200,59 @@ function handleAssignButtonClick(assignButton) {
         }
         return response.json();
     })
-    .then(data => {
-        console.log('Success:', data.message);
-        alert("Intake details sent to technician");
+    .then(async (data) => {
+        console.log('✅ Email sent:', data.message);
 
-        // Clear form fields
+        // Send asset data to your MongoDB backend
+        for (const item of collectedItems) {
+            try {
+                const response = await fetch('https://your-backend-url.com/assets', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(item)
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    console.error("❌ Failed to save asset:", result.message);
+                } else {
+                    console.log("✅ Asset saved:", result.asset?.tagNumber);
+                }
+            } catch (err) {
+                console.error("❌ Network error while saving asset:", err);
+            }
+        }
+
+        alert("All assets recorded and intake email sent!");
+
+        // UI + State Reset
         document.getElementById('pc-details').innerHTML = "";
         document.getElementById('result')?.classList.add('d-none');
         document.getElementById('technicianName').value = "";
         document.getElementById('technicianStaffNumber').value = "";
         document.getElementById('technicianEmail').value = "";
 
-        // Reset data
         scannedItems = [];
         itemIndex = 0;
-        
-        assignButton.disabled = false;
-        // Reset location
         window.lastScannedLocation = "";
         const locationDisplay = document.getElementById('current-location-display');
         if (locationDisplay) {
             locationDisplay.textContent = "Current Location: Not Set";
         }
 
-
-        // Close modal
         const technicianModalEl = document.getElementById('technicianModal');
         if (technicianModalEl) {
             const technicianModal = bootstrap.Modal.getInstance(technicianModalEl);
             technicianModal?.hide();
         }
+
+        assignButton.disabled = false;
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert("An error occurred, please try again.");
+        console.error('❌ Final error:', error);
+        alert("An error occurred. Please try again.");
         assignButton.disabled = false;
     });
 }
